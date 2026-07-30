@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ruleset name="whop-woocommerce-ruleset">
+    <description>Project-specific WordPress Coding Standards for the Whop WooCommerce plugin.</description>
+
+    <arg name="extensions" value="php"/>
+    <arg name="basepath" value="."/>
+    <arg name="parallel" value="75"/>
+    <arg name="cache" value=".phpcs-cache"/>
+
+    <file>whop-woocommerce.php</file>
+    <file>uninstall.php</file>
+    <file>includes</file>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>phpstan/*</exclude-pattern>
+    <exclude-pattern>assets/generated/*</exclude-pattern>
+
+    <config name="minimum_supported_wp_version" value="6.0"/>
+    <config name="testVersion" value="8.2-"/>
+
+    <rule ref="WordPress">
+        <!-- Preserve project architecture and naming while keeping security/compliance checks. -->
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+        <exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning"/>
+        <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie.BraceOnNewLine"/>
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+        <!-- Windows CRLF is acceptable in this repository. -->
+        <exclude name="Generic.Files.LineEndings.InvalidEOLChar"/>
+        <!-- Class brace placement is formatting-only for this project. -->
+        <exclude name="Generic.Classes.OpeningBraceSameLine.BraceOnNewLine"/>
+        <exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>
+        <!-- Argument spacing style does not affect plugin runtime safety. -->
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.NoSpaceAfterArg"/>
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.NoSpaceBeforeArg"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature"/>
+        <exclude name="Squiz.Commenting.ClassComment"/>
+        <exclude name="Squiz.Commenting.FileComment"/>
+        <exclude name="Squiz.Commenting.FunctionComment"/>
+        <exclude name="Squiz.Commenting.VariableComment"/>
+        <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+        <!-- Docs-only requirement; not a release safety concern. -->
+        <exclude name="Squiz.Commenting.FunctionCommentThrowTag.Missing"/>
+        <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found"/>
+        <exclude name="Universal.Operators.DisallowShortTernary.Found"/>
+        <exclude name="Universal.Operators.DisallowStandalonePostIncrementDecrement.Found"/>
+        <exclude name="Universal.CodeAnalysis.NoEchoSprintf.Found"/>
+        <exclude name="Universal.Files.SeparateFunctionsFromOO.Mixed"/>
+        <!-- Keep array checks but skip formatting-only spacing rules. -->
+        <exclude name="NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceAfterArrayOpenerSingleLine"/>
+        <exclude name="NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserSingleLine"/>
+        <exclude name="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound"/>
+        <exclude name="WordPress.Arrays.ArrayKeySpacingRestrictions.NoSpacesAroundArrayKeys"/>
+        <exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned"/>
+        <!-- Disable whitespace-only control/operator spacing churn. -->
+        <exclude name="Generic.WhiteSpace.ArbitraryParenthesesSpacing.SpaceAfterOpen"/>
+        <exclude name="Generic.WhiteSpace.ArbitraryParenthesesSpacing.SpaceBeforeClose"/>
+        <exclude name="WordPress.WhiteSpace.CastStructureSpacing.NoSpaceBeforeOpenParenthesis"/>
+        <exclude name="WordPress.WhiteSpace.ControlStructureSpacing.NoSpaceAfterOpenParenthesis"/>
+        <exclude name="WordPress.WhiteSpace.ControlStructureSpacing.NoSpaceBeforeCloseParenthesis"/>
+        <exclude name="WordPress.WhiteSpace.OperatorSpacing.NoSpaceAfter"/>
+        <exclude name="WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore"/>
+        <exclude name="WordPress.Files.FileName"/>
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+        <exclude name="WordPress.NamingConventions.ValidFunctionName"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName"/>
+        <exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
+        <!-- Escaping exceptions and translated exception messages are not rendered output. -->
+        <exclude name="WordPress.Security.EscapeOutput.ExceptionNotEscaped"/>
+        <!-- Project intentionally uses a centralized PHP error_log-backed logger. -->
+        <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log"/>
+        <!-- UTC timestamp usage is explicit for cross-system consistency. -->
+        <exclude name="WordPress.DateTime.CurrentTimeTimestamp.Requested"/>
+    </rule>
+
+    <rule ref="WordPress-Core"/>
+    <!-- WordPress-Docs is excluded to avoid documentation-only release gate failures. -->
+    <rule ref="WordPress-Extra"/>
+
+    <!-- Function argument parenthesis spacing is formatting-only and conflicts with established code style. -->
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterOpen">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose">
+        <severity>0</severity>
+    </rule>
+
+    <!-- WordPress hook callbacks may need unused parameters to preserve compatibility. -->
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.Found">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Pre/post increment preference is style-only for this project. -->
+    <rule ref="Universal.Operators.DisallowStandalonePostIncrementDecrement.PostIncrementFound">
+        <severity>0</severity>
+    </rule>
+
+    <!-- current_time( 'timestamp', true ) is intentionally used for WordPress-consistent UTC timestamps. -->
+    <rule ref="WordPress.DateTime.CurrentTimeTimestamp.RequestedUTC">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="whop-woocommerce"/>
+            </property>
+        </properties>
+    </rule>
+</ruleset>

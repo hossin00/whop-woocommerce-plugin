@@ -1,0 +1,30 @@
+# Dependencies
+vendor/
+
+# Environment and local overrides
+.env
+.env.*
+*.local
+
+# PHPStan / analysis artifacts
+phpstan-report.json
+phpstan.json
+phpstan.err
+phpstan-raw.txt
+
+# PHPCS cache
+.phpcs-cache
+
+# OS/editor temp files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# WordPress local/debug artifacts
+wp-content/debug.log
+wp-content/uploads/
+*.log

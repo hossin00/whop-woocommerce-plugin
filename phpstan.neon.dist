@@ -1,0 +1,9 @@
+parameters:
+    level: 7
+    paths:
+        - includes
+    bootstrapFiles:
+        - %currentWorkingDirectory%/phpstan/stubs/wp-stubs.php
+        - %currentWorkingDirectory%/phpstan/stubs/woo-stubs.php
+    excludePaths:
+        - tests/*
