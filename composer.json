@@ -1,0 +1,28 @@
+{
+  "name": "whop/woocommerce-checkout",
+  "description": "Whop WooCommerce Checkout plugin to replace the WooCommerce checkout with an embedded Whop checkout.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": "^8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Whop\\WooCommerce\\": "includes/"
+    }
+  },
+  "extra": {
+    "installer-name": "whop-woocommerce-plugin"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^2.2",
+    "squizlabs/php_codesniffer": "3.13.5",
+    "wp-coding-standards/wpcs": "3.4.1",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.2"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

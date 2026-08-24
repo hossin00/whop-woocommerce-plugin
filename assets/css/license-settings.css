@@ -1,0 +1,39 @@
+/* license-settings.css */
+
+.license-status-active {
+    color: #4CAF50; /* Green */
+    font-weight: bold;
+}
+
+.license-status-inactive {
+    color: #FF9800; /* Orange */
+    font-weight: bold;
+}
+
+.license-status-invalid {
+    color: #F44336; /* Red */
+    font-weight: bold;
+}
+
+.notice {
+    margin-top: 15px;
+    padding: 12px;
+    border-left: 4px solid;
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+}
+
+.notice-success {
+    border-color: #4CAF50;
+    background-color: #e8f5e9;
+}
+
+.notice-error {
+    border-color: #F44336;
+    background-color: #ffebee;
+}
+
+.notice p {
+    margin: 0;
+    padding: 0;
+}

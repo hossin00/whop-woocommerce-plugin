@@ -1,0 +1,88 @@
+.payment_method_whop_card img,
+.payment_method_whop_bank_transfer img,
+.payment_method_whop_crypto img,
+.payment_method_whop_paypal img {
+    width: auto;
+    height: 24px;
+    max-width: 92px;
+    margin-left: 10px;
+    vertical-align: middle;
+    object-fit: contain;
+}
+
+.wc-block-components-radio-control__option:has(input[value="whop_card"]),
+.wc-block-components-radio-control__option:has(input[value="whop_bank_transfer"]),
+.wc-block-components-radio-control__option:has(input[value="whop_crypto"]),
+.wc-block-components-radio-control__option:has(input[value="whop_paypal"]) {
+    align-items: center;
+}
+
+.whop-native-block-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.whop-native-block-label img {
+    width: auto;
+    height: 24px;
+    max-width: 92px;
+    object-fit: contain;
+}
+
+.whop-native-payment-shell {
+    box-sizing: border-box;
+    max-width: 720px;
+    margin: 48px auto;
+    padding: 0 20px;
+}
+
+.whop-native-payment-header {
+    margin-bottom: 20px;
+}
+
+.whop-native-payment-header h1 {
+    margin: 0 0 8px;
+}
+
+.whop-native-payment-header p {
+    margin: 0;
+}
+
+.whop-native-payment-kicker {
+    color: #0f766e;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.whop-native-payment-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgb(15 23 42 / 8%);
+    padding: 20px;
+}
+
+@media (max-width: 600px) {
+    .payment_method_whop_card img,
+    .payment_method_whop_bank_transfer img,
+    .payment_method_whop_crypto img,
+    .payment_method_whop_paypal img,
+    .whop-native-block-label img {
+        height: 20px;
+        max-width: 76px;
+    }
+
+    .whop-native-payment-shell {
+        margin: 24px auto;
+        padding: 0 14px;
+    }
+
+    .whop-native-payment-card {
+        border-radius: 10px;
+        padding: 12px;
+    }
+}

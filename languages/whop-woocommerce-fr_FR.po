@@ -1,0 +1,119 @@
+msgid ""
+msgstr "Project-Id-Version: Whop WooCommerce Checkout 0.1.27\\nLanguage: fr_FR\\nMIME-Version: 1.0\\nContent-Type: text/plain; charset=UTF-8\\nContent-Transfer-Encoding: 8bit\\n"
+
+msgid "Buy Now"
+msgstr "Acheter maintenant"
+
+msgid "By continuing, you agree to %s’s website policies and terms."
+msgstr "En continuant, vous acceptez les conditions et les politiques du site %s."
+
+msgid "Checkout Complete"
+msgstr "Paiement terminé"
+
+msgid "Checkout Update"
+msgstr "Mise à jour du paiement"
+
+msgid "Checkout template not found."
+msgstr "Modèle de paiement introuvable."
+
+msgid "Complete Your Purchase"
+msgstr "Finalisez votre achat"
+
+msgid "Completion template not found."
+msgstr "Modèle de confirmation introuvable."
+
+msgid "Delivery across France"
+msgstr "Livraison partout en France"
+
+msgid "Free shipping"
+msgstr "Livraison gratuite"
+
+msgid "Friendly customer support"
+msgstr "Support client disponible"
+
+msgid "If your order does not update shortly, please contact support with your order reference."
+msgstr "Si votre commande ne se met pas à jour rapidement, contactez le support avec votre référence de commande."
+
+msgid "Invalid request token. Please refresh the page and try again."
+msgstr "Jeton de requête invalide. Actualisez la page et réessayez."
+
+msgid "Invalid request. Please try again."
+msgstr "Demande invalide. Veuillez réessayer."
+
+msgid "JavaScript is required to load embedded checkout."
+msgstr "JavaScript est requis pour charger le paiement intégré."
+
+msgid "Order total"
+msgstr "Total de la commande"
+
+msgid "Payment"
+msgstr "Paiement"
+
+msgid "Payment Not Completed"
+msgstr "Paiement non terminé"
+
+msgid "Payment Submitted"
+msgstr "Paiement envoyé"
+
+msgid "Privacy Policy"
+msgstr "Politique de confidentialité"
+
+msgid "Protected checkout"
+msgstr "Paiement protégé"
+
+msgid "Qty %d"
+msgstr "Qté %d"
+
+msgid "Refund & Returns Policy"
+msgstr "Politique de remboursement et retours"
+
+msgid "Review your order, then complete payment securely on this page."
+msgstr "Vérifiez votre commande, puis finalisez le paiement en toute sécurité sur cette page."
+
+msgid "Satisfaction guaranteed"
+msgstr "Satisfaction garantie"
+
+msgid "Secure & encrypted"
+msgstr "Sécurisé et chiffré"
+
+msgid "Secure checkout"
+msgstr "Paiement sécurisé"
+
+msgid "Secure payment"
+msgstr "Paiement sécurisé"
+
+msgid "Shipping Policy"
+msgstr "Politique de livraison"
+
+msgid "Terms & Conditions"
+msgstr "Conditions générales"
+
+msgid "Unable to initialize checkout. Please return to the product page and try again."
+msgstr "Impossible d’initialiser le paiement. Revenez à la page du produit et réessayez."
+
+msgid "Unable to start Whop checkout. Please try again later."
+msgstr "Impossible de démarrer le paiement. Veuillez réessayer plus tard."
+
+msgid "We are verifying your payment status. This page does not finalize orders by itself."
+msgstr "Nous vérifions l’état de votre paiement. Cette page ne finalise pas la commande elle-même."
+
+msgid "Website policies"
+msgstr "Politiques du site"
+
+msgid "What you are buying"
+msgstr "Votre achat"
+
+msgid "You will stay on %s while you pay."
+msgstr "Vous restez sur %s pendant votre paiement."
+
+msgid "Your checkout is already being processed. Please wait a moment and try again."
+msgstr "Votre paiement est déjà en cours de traitement. Attendez un instant puis réessayez."
+
+msgid "Your checkout was cancelled or failed. No order is fulfilled unless a verified webhook confirms payment."
+msgstr "Votre paiement a été annulé ou a échoué. Aucune commande n’est traitée sans confirmation par un webhook vérifié."
+
+msgid "Your order"
+msgstr "Votre commande"
+
+msgid "Your payment was submitted successfully. Order fulfillment only occurs after the payment.succeeded webhook is verified."
+msgstr "Votre paiement a été envoyé avec succès. La commande ne sera traitée qu’après vérification du webhook payment.succeeded."
