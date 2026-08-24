@@ -8,6 +8,7 @@ use WC_Product;
 use Whop\WooCommerce\Checkout\RedirectService;
 use Whop\WooCommerce\Helpers\Config;
 use Whop\WooCommerce\Logger\Logger;
+use Whop\WooCommerce\Licensing\Interfaces\ILicenseManager;
 
 final class Checkout
 {
@@ -23,13 +24,15 @@ final class Checkout
     private RedirectService $redirectService;
     private Logger $logger;
     private Config $config;
+    private ILicenseManager $licenseManager;
 
-    public function __construct(CheckoutService $checkoutService, RedirectService $redirectService, Logger $logger, Config $config)
+    public function __construct(CheckoutService $checkoutService, RedirectService $redirectService, Logger $logger, Config $config, ILicenseManager $licenseManager)
     {
         $this->checkoutService = $checkoutService;
         $this->redirectService = $redirectService;
         $this->logger = $logger;
         $this->config = $config;
+        $this->licenseManager = $licenseManager;
     }
 
     public function render_buy_now_button(): void
@@ -427,6 +430,16 @@ final class Checkout
     {
         if (is_admin() && ! wp_doing_ajax()) {
             return $gateways;
+        }
+
+        if (!$this->licenseManager->isPremiumFeatureEnabled()) {
+            if (function_exists('is_checkout') && is_checkout() && function_exists('wc_add_notice')) {
+                wc_add_notice(
+                    __('Activate a valid Whop Checkout license in WooCommerce → License to use commercial payment gateways.', 'whop-woocommerce'),
+                    'notice'
+                );
+            }
+            return [];
         }
 
         $allowed = ['whop_card', 'whop_bank_transfer', 'whop_crypto'];

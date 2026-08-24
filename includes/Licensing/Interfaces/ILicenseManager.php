@@ -39,4 +39,19 @@ interface ILicenseManager
      * @return array An array containing detailed license information.
      */
     public function getLicenseInfo(): array;
+
+    /**
+     * Requests a short-lived, one-use package only at the native WordPress
+     * updater execution point.
+     *
+     * @param string $version The published version requested by the updater.
+     * @return array An array containing status and an opaque package URL.
+     */
+    public function getPackageForUpdate(string $version): array;
+
+    /**
+     * Indicates whether commercial gateway functionality is currently enabled
+     * from a valid local state or bounded last-known-valid grace period.
+     */
+    public function isPremiumFeatureEnabled(): bool;
 }

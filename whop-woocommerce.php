@@ -3,7 +3,7 @@
  * Plugin Name: Whop WooCommerce Checkout
  * Plugin URI:  https://example.com/whop-woocommerce-checkout
  * Description: Replace WooCommerce checkout with an embedded Whop checkout while keeping customers on the same domain.
- * Version:     0.1.57
+ * Version:     0.1.58-rc1
  * Author:      Whop
  * Author URI:  https://example.com
  * Text Domain: whop-woocommerce

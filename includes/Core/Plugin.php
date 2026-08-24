@@ -30,7 +30,7 @@ use Whop\WooCommerce\Webhooks\WebhookIdempotencyService;
 use Whop\WooCommerce\Licensing\LicenseStorage;
 use Whop\WooCommerce\Licensing\LicenseManager;
 use Whop\WooCommerce\Licensing\LicenseValidator;
-use Whop\WooCommerce\Licensing\Providers\LemonSqueezyProvider;
+use Whop\WooCommerce\Licensing\Providers\SaaSLicenseProvider;
 use Whop\WooCommerce\Licensing\UpdatesHandler;
 use Whop\WooCommerce\Licensing\LicenseCron;
 
@@ -85,7 +85,7 @@ final class Plugin
     private function define_constants(): void
     {
         if (!defined('WHOP_WOOCOMMERCE_VERSION')) {
-            define('WHOP_WOOCOMMERCE_VERSION', '0.1.57');
+            define('WHOP_WOOCOMMERCE_VERSION', '0.1.58-rc1');
         }
 
         if (!defined('WHOP_WOOCOMMERCE_FILE')) {
@@ -133,11 +133,10 @@ final class Plugin
             return new Logger($this->container->get('config'));
         });
 
-        // Licensing Services
-        $this->container->register('license_provider', function (): LemonSqueezyProvider {
-            $apiKey = get_option('whop_wc_lemon_squeezy_api_key', '');
-            $storeId = get_option('whop_wc_lemon_squeezy_store_id', '');
-            return new LemonSqueezyProvider($apiKey, $storeId);
+        // Licensing services use the existing local manager/storage and a SaaS
+        // provider. Checkout credentials remain isolated in Config/SettingsPage.
+        $this->container->register('license_provider', function (): SaaSLicenseProvider {
+            return new SaaSLicenseProvider();
         });
 
         $this->container->register('updates_handler', function (): UpdatesHandler {
@@ -276,7 +275,8 @@ final class Plugin
                 $this->container->get('checkout_service'),
                 $this->container->get('redirect_service'),
                 $this->container->get('logger'),
-                $this->container->get('config')
+                $this->container->get('config'),
+                $this->container->get('license_manager')
             );
         });
 

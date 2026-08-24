@@ -54,6 +54,25 @@ class LicensePage
             'whop-woocommerce-license',
             [$this, 'render_page']
         );
+        add_action('admin_notices', [$this, 'render_premium_gate_notice']);
+    }
+
+    public function render_premium_gate_notice(): void
+    {
+        if (!current_user_can('manage_options') || $this->licenseManager->isPremiumFeatureEnabled()) {
+            return;
+        }
+
+        $url = admin_url('admin.php?page=whop-woocommerce-license');
+        printf(
+            '<div class="notice notice-warning"><p>%s</p></div>',
+            wp_kses_post(
+                sprintf(
+                    __('Whop Checkout commercial gateways require a valid license. <a href="%s">Open License</a>. Existing storefront content and historic orders are unaffected.', 'whop-woocommerce'),
+                    esc_url($url)
+                )
+            )
+        );
     }
 
     /**
@@ -62,28 +81,35 @@ class LicensePage
     public function render_page(): void
     {
         $licenseInfo = $this->licenseManager->getLicenseInfo();
-        $licenseKey = $licenseInfo['license_key'] ?? '';
-        $licenseStatus = $licenseInfo['status'] ?? __('Inactive', 'whop-woocommerce');
-        $licenseType = $licenseInfo['license_type'] ?? __('N/A', 'whop-woocommerce');
-        $supportExpiration = $licenseInfo['support_expiration'] ?? __('N/A', 'whop-woocommerce');
+        $licenseStatus = (string) ($licenseInfo['status'] ?? 'inactive');
+        $licenseType = (string) ($licenseInfo['license_type'] ?? __('N/A', 'whop-woocommerce'));
+        $supportExpiration = (string) ($licenseInfo['support_expiration'] ?? __('N/A', 'whop-woocommerce'));
+        $updatesExpiration = (string) ($licenseInfo['updates_expiration'] ?? __('N/A', 'whop-woocommerce'));
+        $sitesUsed = absint($licenseInfo['sites_used'] ?? 0);
+        $siteLimit = $licenseInfo['site_limit'] ?? null;
+        $sitesAllowed = !empty($licenseInfo['unlimited_sites']) || $siteLimit === null
+            ? __('Unlimited', 'whop-woocommerce')
+            : (string) absint($siteLimit);
         $currentVersion = $licenseInfo['current_version'] ?? WHOP_WOOCOMMERCE_VERSION;
-        $lastCheck = $licenseInfo['last_check'] ? date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $licenseInfo['last_check']) : __('Never', 'whop-woocommerce');
+        $lastCheck = !empty($licenseInfo['last_check']) ? date_i18n(get_option('date_format') . ' ' . get_option('time_format'), (int) $licenseInfo['last_check']) : __('Never', 'whop-woocommerce');
 
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Whop Checkout License', 'whop-woocommerce'); ?></h1>
-            <form method="post" action="options.php">
-                <?php
-                settings_fields('whop_woocommerce_license_group');
-                do_settings_sections('whop-woocommerce-license');
-                ?>
+            <?php if ($licenseStatus !== 'active') : ?>
+                <div class="notice notice-warning"><p><?php esc_html_e('A valid license is required for premium licensing, updates, and support. Existing checkout behavior is not changed by this notice.', 'whop-woocommerce'); ?></p></div>
+            <?php elseif (empty($licenseInfo['updates_active'])) : ?>
+                <div class="notice notice-info"><p><?php esc_html_e('Your perpetual core license remains active, but updates are currently unavailable. Renew support and updates to receive new releases.', 'whop-woocommerce'); ?></p></div>
+            <?php endif; ?>
+            <form method="post" action="options.php" autocomplete="off">
+                <?php // License actions are handled only by nonce-protected AJAX. ?>
                 <table class="form-table">
                     <tbody>
                         <tr>
                             <th scope="row"><label for="whop_wc_license_key"><?php esc_html_e('License Key', 'whop-woocommerce'); ?></label></th>
                             <td>
-                                <input type="text" id="whop_wc_license_key" name="whop_wc_license_key" value="<?php echo esc_attr($licenseKey); ?>" class="regular-text" placeholder="<?php esc_attr_e('Enter your license key', 'whop-woocommerce'); ?>" />
-                                <p class="description"><?php esc_html_e('Enter your plugin license key here.', 'whop-woocommerce'); ?></p>
+                                <input type="password" id="whop_wc_license_key" name="whop_wc_license_key" value="" class="regular-text" autocomplete="new-password" placeholder="<?php esc_attr_e('Enter a license key to activate or replace it', 'whop-woocommerce'); ?>" />
+                                <p class="description"><?php esc_html_e('The stored key is encrypted and never rendered back into this page. Enter it again only to activate or replace a license.', 'whop-woocommerce'); ?></p>
                             </td>
                         </tr>
                         <tr>
@@ -95,7 +121,15 @@ class LicensePage
                             <td><?php echo esc_html($licenseType); ?></td>
                         </tr>
                         <tr>
-                            <th scope="row"><?php esc_html_e('Support Expiration', 'whop-woocommerce'); ?></th>
+                            <th scope="row"><?php esc_html_e('Sites Used / Allowed', 'whop-woocommerce'); ?></th>
+                            <td><?php echo esc_html($sitesUsed . ' / ' . $sitesAllowed); ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Updates Until', 'whop-woocommerce'); ?></th>
+                            <td><?php echo esc_html($updatesExpiration); ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Support Until', 'whop-woocommerce'); ?></th>
                             <td><?php echo esc_html($supportExpiration); ?></td>
                         </tr>
                         <tr>
@@ -125,44 +159,8 @@ class LicensePage
      */
     public function register_settings(): void
     {
-        register_setting(
-            'whop_woocommerce_license_group',
-            'whop_wc_license_key',
-            [$this, 'sanitize_license_key']
-        );
-
-        add_settings_section(
-            'whop_woocommerce_license_section',
-            __('License Management', 'whop-woocommerce'),
-            null,
-            'whop-woocommerce-license'
-        );
-
-        add_settings_field(
-            'whop_wc_license_key_field',
-            __('License Key', 'whop-woocommerce'),
-            [$this, 'render_license_key_field'],
-            'whop-woocommerce-license',
-            'whop_woocommerce_license_section'
-        );
-    }
-
-    /**
-     * Renders the license key input field (used by settings API, but we're rendering manually).
-     */
-    public function render_license_key_field(): void
-    {
-        // Rendered manually in render_page() for better control.
-    }
-
-    /**
-     * Sanitizes the license key input.
-     * @param string $input The raw license key input.
-     * @return string The sanitized license key.
-     */
-    public function sanitize_license_key(string $input): string
-    {
-        return sanitize_text_field($input);
+        // Kept as a no-op hook for backward compatibility. License state is saved
+        // only through LicenseStorage after a provider-confirmed activation.
     }
 
     /**
@@ -185,7 +183,8 @@ class LicensePage
         // Also save to settings for UI consistency if needed, but Manager handles storage
         $response = $this->licenseManager->activateLicense($licenseKey);
         if ($response['status'] === 'success') {
-            update_option('whop_wc_license_key', $licenseKey);
+            // Remove the historical plaintext option if a previous version wrote it.
+            delete_option('whop_wc_license_key');
             wp_send_json_success(['message' => $response['message']]);
         } else {
             wp_send_json_error(['message' => $response['message']]);
