@@ -46,7 +46,11 @@ final class LicenseManager implements ILicenseManager
         LicenseCache::set($licenseData);
         LicenseCache::updateLastCheck();
 
-        return ['status' => 'success', 'message' => __('License activated successfully.', 'whop-woocommerce'), 'data' => $licenseData];
+        return [
+            'status' => 'success',
+            'message' => __('License activated successfully.', 'whop-woocommerce'),
+            'data' => $this->withoutKey($licenseData),
+        ];
     }
 
     public function deactivateLicense(): array
