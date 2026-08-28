@@ -85,7 +85,7 @@ final class Plugin
     private function define_constants(): void
     {
         if (!defined('WHOP_WOOCOMMERCE_VERSION')) {
-            define('WHOP_WOOCOMMERCE_VERSION', '0.1.58-rc1');
+            define('WHOP_WOOCOMMERCE_VERSION', '0.1.58-rc2');
         }
 
         if (!defined('WHOP_WOOCOMMERCE_FILE')) {
