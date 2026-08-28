@@ -46,7 +46,11 @@ final class LicenseManager implements ILicenseManager
         LicenseCache::set($licenseData);
         LicenseCache::updateLastCheck();
 
-        return ['status' => 'success', 'message' => __('License activated successfully.', 'whop-woocommerce'), 'data' => $licenseData];
+        return [
+            'status' => 'success',
+            'message' => __('License activated successfully.', 'whop-woocommerce'),
+            'data' => $this->withoutKey($licenseData),
+        ];
     }
 
     public function deactivateLicense(): array
@@ -211,7 +215,21 @@ final class LicenseManager implements ILicenseManager
 
     private function withoutKey(array $data): array
     {
-        unset($data['license_key']);
+        foreach ($data as $key => $value) {
+            $normalizedKey = is_string($key)
+                ? strtolower((string) preg_replace('/[^a-z0-9]/i', '', $key))
+                : '';
+
+            if ($normalizedKey === 'licensekey' || $normalizedKey === 'rawlicensekey') {
+                unset($data[$key]);
+                continue;
+            }
+
+            if (is_array($value)) {
+                $data[$key] = $this->withoutKey($value);
+            }
+        }
+
         return $data;
     }
 

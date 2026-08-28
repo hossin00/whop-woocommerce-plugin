@@ -17,18 +17,31 @@ class LicenseCache
     public static function set(array $licenseData): bool
     {
         return update_option(self::CACHE_KEY, [
-            'data' => $licenseData,
-            'timestamp' => time(),
+            'data' => self::withoutLicenseKeys($licenseData),
+            'timestamp' => self::now(),
         ]);
     }
 
     public static function get(): ?array
     {
         $cached = get_option(self::CACHE_KEY);
-        if (!$cached || !isset($cached['data'], $cached['timestamp'])) {
+        if (!$cached || !isset($cached['data'], $cached['timestamp']) || !is_array($cached['data'])) {
             return null;
         }
-        return $cached['data'];
+
+        $safeData = self::withoutLicenseKeys($cached['data']);
+
+        // Migrate a cache written by an older release without ever returning its
+        // plaintext license key to callers. Preserve the original timestamp so
+        // this cleanup cannot extend cache validity or the offline grace window.
+        if ($safeData !== $cached['data']) {
+            update_option(self::CACHE_KEY, [
+                'data' => $safeData,
+                'timestamp' => (int) $cached['timestamp'],
+            ]);
+        }
+
+        return $safeData;
     }
 
     public static function isValid(): bool
@@ -37,22 +50,62 @@ class LicenseCache
         if (!$cached || !isset($cached['timestamp'])) {
             return false;
         }
-        return (time() - $cached['timestamp']) < self::CACHE_DURATION;
+        return (self::now() - (int) $cached['timestamp']) < self::CACHE_DURATION;
     }
 
     public static function isWithinGracePeriod(): bool
     {
         $lastCheck = get_option(self::LAST_CHECK_KEY, 0);
-        return (time() - (int)$lastCheck) < self::GRACE_PERIOD;
+        return (self::now() - (int) $lastCheck) < self::GRACE_PERIOD;
     }
 
     public static function updateLastCheck(): void
     {
-        update_option(self::LAST_CHECK_KEY, time());
+        update_option(self::LAST_CHECK_KEY, self::now());
     }
 
     public static function clear(): void
     {
         delete_option(self::CACHE_KEY);
+    }
+
+    /**
+     * Remove license credentials recursively before data reaches WordPress'
+     * plaintext options/cache layer.
+     */
+    private static function withoutLicenseKeys(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            $normalizedKey = is_string($key)
+                ? strtolower((string) preg_replace('/[^a-z0-9]/i', '', $key))
+                : '';
+
+            if ($normalizedKey === 'licensekey' || $normalizedKey === 'rawlicensekey') {
+                unset($data[$key]);
+                continue;
+            }
+
+            if (is_array($value)) {
+                $data[$key] = self::withoutLicenseKeys($value);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Provide a deterministic clock hook for security and grace-period tests.
+     */
+    private static function now(): int
+    {
+        $now = time();
+        if (function_exists('apply_filters')) {
+            $filtered = apply_filters('whop_wc_license_cache_now', $now);
+            if (is_numeric($filtered)) {
+                return (int) $filtered;
+            }
+        }
+
+        return $now;
     }
 }

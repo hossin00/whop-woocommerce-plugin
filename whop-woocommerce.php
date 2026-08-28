@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Whop WooCommerce Checkout
- * Plugin URI:  https://example.com/whop-woocommerce-checkout
+ * Plugin URI:  https://woocommerce-whop-saas.vercel.app
  * Description: Replace WooCommerce checkout with an embedded Whop checkout while keeping customers on the same domain.
- * Version:     0.1.58-rc1
+ * Version:     0.1.58-rc2
  * Author:      Whop
- * Author URI:  https://example.com
+ * Author URI:  https://woocommerce-whop-saas.vercel.app
  * Text Domain: whop-woocommerce
  * Domain Path: /languages
  * License:     GPLv2 or later
