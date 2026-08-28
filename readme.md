@@ -20,6 +20,11 @@ This plugin replaces the standard WooCommerce checkout experience with an embedd
 
 ## Changelog
 
+### 0.1.58-rc2
+- Removed plaintext license-key persistence from the WordPress cache and added targeted migration of legacy cache entries.
+- Sanitized activation responses so raw license keys remain confined to encrypted local storage and in-process provider calls.
+- Added deterministic coverage for the seven-day offline grace boundary.
+
 ### 0.1.3
 - Stabilized the production runtime package by restoring Composer --no-dev dependencies and removing the unsafe development autoload payload.
 - Restored the checkout loader asset version constant and retained the current embedded checkout configuration flow.
